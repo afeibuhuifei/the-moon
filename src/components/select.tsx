@@ -51,11 +51,15 @@ export function SelectTrigger({ children }: { children: ReactNode }) {
 	return (
 		<button
 			type="button"
-			onClick={() => setOpen(!open)}
-			className="flex w-full cursor-pointer items-center justify-between gap-1 text-left"
+			onClick={(e) => {
+				e.preventDefault()
+				e.stopPropagation()
+				setOpen(!open)
+			}}
+			className="flex w-full cursor-pointer items-center justify-between gap-1 text-left transition-all duration-200 hover:bg-white/5 rounded-xl relative z-50"
 		>
 			{children}
-			<ChevronDownIcon size={14} className={cn("transition-transform", open && "rotate-180")} />
+			<ChevronDownIcon size={14} className={cn("text-white/60 transition-transform duration-200", open && "rotate-180 text-white/80")} />
 		</button>
 	)
 }
@@ -73,7 +77,7 @@ export function SelectContent({ children, alignX = "right", alignY = "bottom" }:
 	return (
 		<ul
 			className={cn(
-				"bg-background absolute z-10 max-h-60 overflow-auto border",
+				"bg-black/90 backdrop-blur-xl absolute z-50 max-h-60 overflow-auto border border-white/10 shadow-2xl rounded-xl",
 				alignX === "left" ? "left-0" : "right-0",
 				alignY === "top" ? "bottom-full mb-2" : "mt-3"
 			)}
@@ -90,10 +94,14 @@ export function SelectItem({ value, children }: { value: string | number; childr
 	return (
 		<li
 			className={cn(
-				"cursor-pointer px-3 py-2 whitespace-nowrap",
-				active ? "text-muted-foreground bg-white/10 font-semibold" : "hover:bg-white/20"
+				"cursor-pointer px-3 py-2 whitespace-nowrap rounded-lg transition-all duration-200",
+				active
+					? "text-white bg-white/10 font-semibold border border-white/20"
+					: "text-white/80 hover:bg-white/10 hover:text-white hover:border border border-transparent"
 			)}
-			onClick={() => {
+			onClick={(e) => {
+				e.preventDefault()
+				e.stopPropagation()
 				onChange(value)
 				setOpen(false)
 			}}

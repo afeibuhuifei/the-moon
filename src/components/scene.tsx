@@ -17,6 +17,8 @@ import {
 import { Debug } from "./debug"
 import { Earth } from "./earth"
 import { Moon } from "./moon"
+import { Mars } from "./mars"
+import { Sun } from "./sun"
 
 export function Scene() {
 	return (
@@ -268,7 +270,10 @@ export function Component() {
 
 	return (
 		<div ref={mountRef} className="h-full w-full cursor-grab touch-none">
-			{selected === "moon" ? <Moon world={world} /> : <Earth world={world} />}
+			{selected === "moon" && <Moon world={world} />}
+			{selected === "earth" && <Earth world={world} />}
+			{selected === "mars" && <Mars world={world} />}
+			{selected === "sun" && <Sun world={world} />}
 			<Debug />
 		</div>
 	)

@@ -30,6 +30,14 @@ type State = {
 		earthRadius: number
 		earthRotationSpeed: number
 	}
+	mars: {
+		marsRadius: number
+		marsRotationSpeed: number
+	}
+	sun: {
+		sunRadius: number
+		sunRotationSpeed: number
+	}
 	clouds: {
 		cloudsRotationSpeed: number
 	}
@@ -83,6 +91,14 @@ const defaultState: Omit<State, "setSelected" | "setViewPerspective" | "updateCo
 	earth: {
 		earthRadius: 6378,
 		earthRotationSpeed: (2 * Math.PI) / 86_400,
+	},
+	mars: {
+		marsRadius: 3389.5,
+		marsRotationSpeed: (2 * Math.PI) / 88_775, // 火星自转周期（24.6小时）
+	},
+	sun: {
+		sunRadius: 695700,
+		sunRotationSpeed: (2 * Math.PI) / 600_000, // 太阳自转周期（约25天）
 	},
 	clouds: {
 		cloudsRotationSpeed: 0.000005,

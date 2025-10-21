@@ -4,6 +4,42 @@ import { StoreProvider } from "@/providers/store"
 import { useIndexStore } from "@/stores"
 import { useEffect, useState } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "./select"
+import { Moon, Earth, Home, Sparkles, Orbit, Sun as SunIcon } from "lucide-react"
+
+const celestialOptions = [
+	{
+		value: "moon",
+		label: "月球",
+		desc: "探索地球的天然卫星",
+		icon: Moon,
+		color: "from-gray-300 to-gray-100",
+		bgGradient: "from-gray-900 via-gray-800 to-black"
+	},
+	{
+		value: "earth",
+		label: "地球",
+		desc: "我们的蓝色家园",
+		icon: Earth,
+		color: "from-blue-400 via-green-400 to-blue-500",
+		bgGradient: "from-blue-900 via-green-800 to-blue-900"
+	},
+	{
+		value: "mars",
+		label: "火星",
+		desc: "红色星球的奥秘",
+		icon: Orbit,
+		color: "from-red-400 to-orange-400",
+		bgGradient: "from-red-900 via-orange-800 to-red-900"
+	},
+	{
+		value: "sun",
+		label: "太阳",
+		desc: "太阳系的中心恒星",
+		icon: SunIcon,
+		color: "from-yellow-300 to-orange-400",
+		bgGradient: "from-yellow-800 via-orange-700 to-yellow-900"
+	}
+] as const
 
 export function Header() {
 	return (
@@ -26,25 +62,92 @@ export function Component() {
 	}, [])
 
 	const handleChange = (value: string | number) => {
-		setSelected(value as "earth" | "moon")
+		setSelected(value as "earth" | "moon" | "mars" | "sun")
 	}
 
+	const currentOption = celestialOptions.find(opt => opt.value === selected)
+	const CurrentIcon = currentOption?.icon || Moon
+
 	return (
-		<header className="text-muted fixed top-0 left-0 z-50 flex w-full items-center justify-between gap-4 p-4">
-			{mounted ? <a href={root}>home</a> : <span>home</span>}
+		<header className="fixed top-0 left-0 z-50 flex w-full items-center justify-between gap-4 p-6">
+			{/* Logo/Brand */}
+			<div className="flex items-center gap-3">
+				{mounted ? (
+					<a
+						href={root}
+						className="group flex items-center gap-2 text-white/80 hover:text-white transition-all duration-200"
+					>
+						<div className="p-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 group-hover:bg-white/15 group-hover:border-white/30 transition-all duration-200">
+							<Home size={16} className="text-white" />
+						</div>
+						<span className="text-sm font-medium">The Moon</span>
+					</a>
+				) : (
+					<div className="flex items-center gap-2 text-white/60">
+						<div className="p-2 rounded-lg bg-white/5 border border-white/10">
+							<Home size={16} />
+						</div>
+						<span className="text-sm font-medium">The Moon</span>
+					</div>
+				)}
+			</div>
 
-			<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">(moon)</div>
+			{/* Center Title */}
+			<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2">
+				<Sparkles size={14} className="text-white/60 animate-pulse" />
+				<div className="text-white/90 text-sm font-medium tracking-wide">
+					3D 天体可视化
+				</div>
+				<Sparkles size={14} className="text-white/60 animate-pulse" />
+			</div>
 
-			<Select value={selected} onChange={handleChange}>
-				<SelectTrigger>
-					<span>{selected || "Select option"}</span>
-				</SelectTrigger>
-
-				<SelectContent alignX="right" alignY="bottom">
-					<SelectItem value="moon">moon</SelectItem>
-					<SelectItem value="earth">earth</SelectItem>
-				</SelectContent>
-			</Select>
+			{/* Celestial Body Selector */}
+			<div className="bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
+				<div className="p-1">
+					<Select value={selected} onChange={handleChange}>
+						<SelectTrigger>
+							<div className="flex items-center gap-3 px-4 py-3">
+								<div className={`p-2 rounded-xl bg-gradient-to-br ${currentOption?.color} shadow-lg`}>
+									<CurrentIcon size={16} className="text-white" />
+								</div>
+								<div className="flex flex-col items-start">
+									<span className="text-sm font-semibold text-white">{currentOption?.label}</span>
+									<span className="text-xs text-white/60">{currentOption?.desc}</span>
+								</div>
+							</div>
+						</SelectTrigger>
+						<SelectContent alignX="right" alignY="bottom">
+							<div className="bg-black/80 backdrop-blur-xl rounded-xl border border-white/10 shadow-2xl p-2 min-w-[200px]">
+								{celestialOptions.map((option) => {
+									const Icon = option.icon
+									const isActive = selected === option.value
+									return (
+										<SelectItem key={option.value} value={option.value}>
+											<div className={`
+												flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200
+												${isActive
+													? 'bg-white/10 border border-white/20'
+													: 'hover:bg-white/5 border border-transparent'
+												}
+											`}>
+												<div className={`p-1.5 rounded-lg bg-gradient-to-br ${option.color}`}>
+													<Icon size={12} className="text-white" />
+												</div>
+												<div className="flex flex-col gap-0.5">
+													<span className={`text-sm font-medium ${isActive ? 'text-white' : 'text-white/80'}`}>
+														{option.label}
+													</span>
+													<span className="text-xs text-white/50">{option.desc}</span>
+												</div>
+											</div>
+										</SelectItem>
+									)
+								})}
+							</div>
+						</SelectContent>
+					</Select>
+				</div>
+			</div>
 		</header>
 	)
 }
