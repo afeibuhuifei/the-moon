@@ -1,9 +1,11 @@
 import { deepMerge } from "@/utils"
 import { create } from "zustand"
+import { SelectedObject, ViewPerspective } from "@/lib/types"
 
 type State = {
 	debug: boolean
 	selected: SelectedObject
+	viewPerspective: ViewPerspective
 	radiusMultiplier: number
 	speedMultiplier: number
 	starfield: {
@@ -49,13 +51,15 @@ type State = {
 		cameraFar: number
 	}
 	setSelected: (value: SelectedObject) => void
+	setViewPerspective: (value: ViewPerspective) => void
 	updateConfig: (partial: Partial<State>) => void
 	resetConfig: () => void
 }
 
-const defaultState: Omit<State, "setSelected" | "updateConfig" | "resetConfig"> = {
+const defaultState: Omit<State, "setSelected" | "setViewPerspective" | "updateConfig" | "resetConfig"> = {
 	debug: false,
 	selected: "moon",
+	viewPerspective: "equator",
 	radiusMultiplier: 0.0005,
 	speedMultiplier: 10000,
 	starfield: {
@@ -106,6 +110,7 @@ export const useIndexStore = create<State>((set, get) => ({
 	...defaultState,
 
 	setSelected: (value: SelectedObject) => set({ selected: value }),
+	setViewPerspective: (value: ViewPerspective) => set({ viewPerspective: value }),
 
 	updateConfig: (partial: Partial<State>) => set((state) => deepMerge(state, partial)),
 

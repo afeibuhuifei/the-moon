@@ -1,8 +1,12 @@
 import { Scene } from "@/components/scene"
+import { Header } from "@/components/header"
+import { ViewPerspectiveSelector } from "@/components/view-perspective-selector"
 
 export default function Page() {
 	return (
 		<main className="h-screen w-screen">
+			<Header />
+			<ViewPerspectiveSelector />
 			<Scene />
 			<footer className="fixed bottom-4 left-1/2 transform -translate-x-1/2 text-white/70 text-sm pointer-events-none z-10">
 				[by afei @2025]

@@ -42,8 +42,16 @@ export function Component() {
 	const lastMouseMoveRef = useRef(Date.now())
 	const lastTouchDistanceRef = useRef(0)
 
+	// 视角预设角度
+	const perspectivePresets = {
+		"north-pole": { pitch: -Math.PI / 3, yaw: 0 },
+		"south-pole": { pitch: Math.PI / 3, yaw: 0 },
+		"equator": { pitch: 0, yaw: 0 }
+	}
+
 	const {
 		selected,
+		viewPerspective,
 		rotation: { dragSpeedFactor, inertiaDamping },
 		zoom: { zoomMin, zoomMax, zoomSpeed },
 		cursor: { cursorHideDelay },
@@ -211,8 +219,39 @@ export function Component() {
 				inertiaRef.current.multiplyScalar(inertiaDamping)
 			}
 
-			world.rotation.x = pitchRef.current
-			world.rotation.y = yawRef.current
+			// apply perspective-specific camera positioning with smooth transitions
+			const preset = perspectivePresets[viewPerspective]
+			const targetPitch = preset.pitch
+			const targetYaw = yawRef.current
+
+			// 当用户切换视角时，重置惯性以获得更明显的切换效果
+			if (!isDraggingRef.current) {
+				// 平滑过渡到目标视角
+				world.rotation.x = MathUtils.lerp(world.rotation.x, targetPitch, 0.08)
+				world.rotation.y = MathUtils.lerp(world.rotation.y, targetYaw, 0.05)
+
+				// 重置惯性以防止视角漂移
+				inertiaRef.current.multiplyScalar(0.9)
+			} else {
+				// 用户拖拽时，应用拖拽效果但受视角限制
+				let constrainedPitch = pitchRef.current
+				let constrainedYaw = yawRef.current
+
+				switch (viewPerspective) {
+					case "north-pole":
+						constrainedPitch = Math.max(constrainedPitch, -Math.PI / 2)
+						break
+					case "south-pole":
+						constrainedPitch = Math.min(constrainedPitch, Math.PI / 2)
+						break
+					case "equator":
+						constrainedPitch = MathUtils.clamp(constrainedPitch, -Math.PI / 3, Math.PI / 3)
+						break
+				}
+
+				world.rotation.x = constrainedPitch
+				world.rotation.y = constrainedYaw
+			}
 
 			// smooth zoom
 			cameraRef.current.position.z += (targetZoomRef.current - cameraRef.current.position.z) * 0.03
@@ -225,7 +264,7 @@ export function Component() {
 		}
 		animate()
 		return () => cancelAnimationFrame(animationId)
-	}, [world, cursorHideDelay, inertiaDamping, pitchMin, pitchMax])
+	}, [world, cursorHideDelay, inertiaDamping, pitchMin, pitchMax, viewPerspective])
 
 	return (
 		<div ref={mountRef} className="h-full w-full cursor-grab touch-none">
