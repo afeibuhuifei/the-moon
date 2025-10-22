@@ -12,7 +12,8 @@ interface Props {
 export function Mars({ world }: Props) {
 	if (!world) return null
 
-	const mars = useMars()
+	const radiusMultiplier = 0.3 // 与地球相同的缩放比例
+	const mars = useMars({ radiusMultiplier })
 	const { speedMultiplier, mars: { marsRotationSpeed } } = useIndexStore()
 	const speedMultiplierRef = useRef(speedMultiplier)
 	speedMultiplierRef.current = speedMultiplier

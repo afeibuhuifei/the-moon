@@ -12,7 +12,8 @@ interface Props {
 export function Sun({ world }: Props) {
 	if (!world) return null
 
-	const { sun, sunGlow, sunLight } = useSun()
+	const radiusMultiplier = 0.2 // 太阳缩放比例调小，避免显示过大占用过多屏幕空间
+	const { sun, sunGlow, sunLight } = useSun({ radiusMultiplier })
 	const { speedMultiplier, sun: { sunRotationSpeed } } = useIndexStore()
 	const speedMultiplierRef = useRef(speedMultiplier)
 	speedMultiplierRef.current = speedMultiplier

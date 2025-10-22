@@ -101,53 +101,8 @@ export function Component() {
 				<Sparkles size={14} className="text-white/60 animate-pulse" />
 			</div>
 
-			{/* Celestial Body Selector */}
-			<div className="bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
-				<div className="p-1">
-					<Select value={selected} onChange={handleChange}>
-						<SelectTrigger>
-							<div className="flex items-center gap-3 px-4 py-3">
-								<div className={`p-2 rounded-xl bg-gradient-to-br ${currentOption?.color} shadow-lg`}>
-									<CurrentIcon size={16} className="text-white" />
-								</div>
-								<div className="flex flex-col items-start">
-									<span className="text-sm font-semibold text-white">{currentOption?.label}</span>
-									<span className="text-xs text-white/60">{currentOption?.desc}</span>
-								</div>
-							</div>
-						</SelectTrigger>
-						<SelectContent alignX="right" alignY="bottom">
-							<div className="bg-black/80 backdrop-blur-xl rounded-xl border border-white/10 shadow-2xl p-2 min-w-[200px]">
-								{celestialOptions.map((option) => {
-									const Icon = option.icon
-									const isActive = selected === option.value
-									return (
-										<SelectItem key={option.value} value={option.value}>
-											<div className={`
-												flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200
-												${isActive
-													? 'bg-white/10 border border-white/20'
-													: 'hover:bg-white/5 border border-transparent'
-												}
-											`}>
-												<div className={`p-1.5 rounded-lg bg-gradient-to-br ${option.color}`}>
-													<Icon size={12} className="text-white" />
-												</div>
-												<div className="flex flex-col gap-0.5">
-													<span className={`text-sm font-medium ${isActive ? 'text-white' : 'text-white/80'}`}>
-														{option.label}
-													</span>
-													<span className="text-xs text-white/50">{option.desc}</span>
-												</div>
-											</div>
-										</SelectItem>
-									)
-								})}
-							</div>
-						</SelectContent>
-					</Select>
-				</div>
-			</div>
+			{/* Empty space - Celestial selector moved to left side panel */}
+			<div></div>
 		</header>
 	)
 }

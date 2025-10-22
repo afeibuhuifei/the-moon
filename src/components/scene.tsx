@@ -19,6 +19,8 @@ import { Earth } from "./earth"
 import { Moon } from "./moon"
 import { Mars } from "./mars"
 import { Sun } from "./sun"
+import { LeftPanel } from "./left-panel"
+import { DraggableInfoPanel } from "./draggable-info-panel"
 
 export function Scene() {
 	return (
@@ -46,9 +48,9 @@ export function Component() {
 
 	// 视角预设角度
 	const perspectivePresets = {
-		"north-pole": { pitch: -Math.PI / 3, yaw: 0 },
-		"south-pole": { pitch: Math.PI / 3, yaw: 0 },
-		"equator": { pitch: 0, yaw: 0 }
+		"north-pole": { pitch: Math.PI / 3, yaw: 0 },   // 北极视角（俯瞰北极）
+		"south-pole": { pitch: -Math.PI / 3, yaw: 0 },  // 南极视角（仰视南极）
+		"equator": { pitch: 0, yaw: 0 }                   // 赤道视角
 	}
 
 	const {
@@ -269,12 +271,16 @@ export function Component() {
 	}, [world, cursorHideDelay, inertiaDamping, pitchMin, pitchMax, viewPerspective])
 
 	return (
-		<div ref={mountRef} className="h-full w-full cursor-grab touch-none">
-			{selected === "moon" && <Moon world={world} />}
-			{selected === "earth" && <Earth world={world} />}
-			{selected === "mars" && <Mars world={world} />}
-			{selected === "sun" && <Sun world={world} />}
-			<Debug />
-		</div>
+		<>
+			<div ref={mountRef} className="h-full w-full cursor-grab touch-none">
+				{selected === "moon" && <Moon world={world} />}
+				{selected === "earth" && <Earth world={world} />}
+				{selected === "mars" && <Mars world={world} />}
+				{selected === "sun" && <Sun world={world} />}
+				<Debug />
+				</div>
+			<LeftPanel />
+			<DraggableInfoPanel />
+		</>
 	)
 }
